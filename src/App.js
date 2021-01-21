@@ -88,7 +88,7 @@ function Model(props) {
         </group>
         <mesh material={materials['Material.001']} geometry={nodes.Plane003.geometry} scale={[11.8, 11.8, 11.8]} />
       </group>
-      <Circle ref={meshRef} args={[2.75, 36, 36]} rotation-x={-Math.PI / 2} position={[1, -1.39, 0]}>
+      <Circle ref={meshRef} args={[12.75, 36, 36]} rotation-x={-Math.PI / 2} position={[1, -1.39, 0]}>
         <reflectorMaterial transparent opacity={0.5} color="black" metalness={1} roughness={1} {...reflectorProps} />
       </Circle>
     </>
