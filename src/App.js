@@ -73,9 +73,9 @@ function Model(props) {
             />
           </mesh>
           <group position={[0.06, 0, 0]}>
-            <Button onClick={(e) => (e.stopPropagation(), setB1(!b1))} position={[b1 ? -0.04 : 0, 0, 0]} />
-            <Button onClick={(e) => (e.stopPropagation(), setB2(!b2))} position={[b2 ? -0.04 : 0, -0.47, 0]} />
-            <Button onClick={(e) => (e.stopPropagation(), setB3(!b3))} position={[b3 ? -0.04 : 0, -0.95, 0]} />
+            <Button onPointerUp={(e) => (e.stopPropagation(), setB1(!b1))} position={[b1 ? -0.04 : 0, 0, 0]} />
+            <Button onPointerUp={(e) => (e.stopPropagation(), setB2(!b2))} position={[b2 ? -0.04 : 0, -0.47, 0]} />
+            <Button onPointerUp={(e) => (e.stopPropagation(), setB3(!b3))} position={[b3 ? -0.04 : 0, -0.95, 0]} />
           </group>
         </mesh>
         <group ref={arm} position={[0, 1.6, 1.85]}>
