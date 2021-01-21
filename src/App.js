@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { createPortal, Canvas, useFrame } from 'react-three-fiber'
-import { useGLTF, Circle, Text, OrbitControls } from 'drei'
+import { useGLTF, Html, Circle, Text, OrbitControls } from 'drei'
 import Particles from './shaders/Particles'
 import usePostprocessing from './shaders/usePostprocessing'
 import useReflector from './shaders/useReflector'
@@ -103,7 +103,7 @@ export default function App() {
       <fog attach="fog" args={['#151515', 20, 25]} />
       <directionalLight position={[-10, 0, -15]} intensity={0.2} />
       <directionalLight position={[10, 10, 10]} intensity={0.2} />
-      <Suspense fallback={null}>
+      <Suspense fallback={<Html center>loading</Html>}>
         <Model position={[1, -1.4, 0]} rotation={[0, -Math.PI / 2, 0]} />
       </Suspense>
       <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={Math.PI / 3} maxPolarAngle={Math.PI / 3} />
