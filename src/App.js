@@ -28,6 +28,7 @@ function Model(props) {
   const dotmaterial = useRef()
   const targetCamera = useRef()
   const screen = useRef()
+  const arm = useRef()
 
   const { nodes, materials } = useGLTF('/arc-draco.glb')
   const [virtualScene] = useState(() => new THREE.Scene())
@@ -43,6 +44,7 @@ function Model(props) {
   useFrame(() => {
     dotmaterial.current.pointer.lerp(pointer, 0.1)
     screen.current.color.lerp(color.set(b1 ? '#60a0ff' : '#0c080a'), 0.1)
+    arm.current.rotation.z = THREE.MathUtils.lerp(arm.current.rotation.z, -Math.PI / (b3 ? 3 : 2), 0.1)
   })
 
   return (
@@ -76,18 +78,14 @@ function Model(props) {
             <Button onClick={(e) => (e.stopPropagation(), setB3(!b3))} position={[b3 ? -0.04 : 0, -0.95, 0]} />
           </group>
         </mesh>
-        <mesh
-          material={materials['Material.004']}
-          geometry={nodes.Plane.geometry}
-          position={[0, 1.6, 1.89]}
-          rotation={[0, 0, -Math.PI / 2]}
-          onPointerMove={(e) => pointer.copy(e.point)}>
-          <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.99, 0.99]}>
-            <screenMaterial ref={screen} roughness={0.18} metalness={0.7} {...screenProps} />
+        <group ref={arm} position={[0, 1.6, 1.85]}>
+          <mesh geometry={nodes.Plane.geometry} material={materials['Material.004']} onPointerMove={(e) => pointer.copy(e.point)}>
+            <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.99, 0.99]}>
+              <screenMaterial ref={screen} roughness={0.18} metalness={0.7} {...screenProps} />
+            </mesh>
           </mesh>
-        </mesh>
-        <mesh geometry={nodes.Plane.geometry} position={[0.01, 1.6, 1.89]} rotation={[0, 0, -Math.PI / 2]} scale={[0.99, 0.1, 0.99]}></mesh>
-        <mesh material={materials['black.002']} geometry={nodes.Plane002.geometry} position={[0, 1.6, 1.89]} rotation={[0, 0, -Math.PI / 2]} />
+          <mesh material={materials['black.002']} geometry={nodes.Plane002.geometry} />
+        </group>
         <mesh material={materials['Material.001']} geometry={nodes.Plane003.geometry} scale={[11.8, 11.8, 11.8]} />
       </group>
       <Circle ref={meshRef} args={[2.75, 36, 36]} rotation-x={-Math.PI / 2} position={[1, -1.39, 0]}>

@@ -40,7 +40,7 @@ class ScreenMaterial extends MeshPhysicalMaterial {
         vec4 textureMap = texture2D(tDiffuse, my_vUv);
         vec4 textureBlur = texture2D(tDiffuseBlur, my_vUv);
         vec2 bbb = abs(my_vUv - 0.5);
-        float mixFactor = smoothstep(0.0, 0.385, bbb.y);
+        float mixFactor = smoothstep(0.0, 0.4, bbb.y);
         textureBlur *= 0.5 + 0.5 * (1.0-mixFactor);
         gl_FragColor += smoothstep(0.0, 1.0, mix(textureMap, textureBlur, mixFactor));
        `
