@@ -5,9 +5,10 @@ class DotMaterial extends THREE.ShaderMaterial {
   constructor() {
     super({
       transparent: true,
-      uniforms: { time: { value: 1 }, pointer: { value: new THREE.Vector3() } },
+      uniforms: { time: { value: 1 }, speed: { value: 1 }, pointer: { value: new THREE.Vector3() } },
       vertexShader: `
       uniform float time;
+      uniform float speed;
       uniform vec3 pointer;
       attribute float size;
       varying float _size;
@@ -16,7 +17,7 @@ class DotMaterial extends THREE.ShaderMaterial {
         x = abs(x - c);
         if( x>w ) return 0.0;
         x /= w;
-        return 1.0 - x*x*(6.0-5.0*x);
+        return 1.0 - x*x*(6.0 * speed-5.0 * speed*x);
       }
 
       void main() {
@@ -38,11 +39,11 @@ class DotMaterial extends THREE.ShaderMaterial {
         vec3 pos = vec3(
           x - pointer.y * 1.,
           y + pointer.x * 2.,
-          30.0* (pulse / mix(4., 1., (normDistance * 1.0)))+
+          30.0 * (pulse / mix(4., 1., (normDistance * 1.0)))+
           + 8.0* (pulse2 / mix(4., 1., (normDistance * 1.0)))+
             0.6 * (cos((8. * PI * (x - COL / 2.)) / COL + time) * sin((8. * PI * (y - ROW / 2.)) / ROW + time)) +
             0.4 * (cos((16. * PI * (x - COL / 2.)) / COL + time) * sin((16. * PI * (y - ROW / 2.)) / ROW + time))
-        );
+        ) * speed;
         pos.z += -10.0;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0 );
         gl_PointSize = size;

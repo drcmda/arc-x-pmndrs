@@ -27,18 +27,23 @@ function Model(props) {
   const group = useRef()
   const dotmaterial = useRef()
   const targetCamera = useRef()
+  const screen = useRef()
 
   const { nodes, materials } = useGLTF('/arc-draco.glb')
   const [virtualScene] = useState(() => new THREE.Scene())
   const [meshRef, reflectorProps, passes] = useReflector()
   const screenProps = usePostprocessing(virtualScene, targetCamera.current, passes)
 
-  const [pointer] = useState(() => new THREE.Vector3())
-  useFrame(() => dotmaterial.current.pointer.lerp(pointer, 0.1))
-
   const [b1, setB1] = useState(false)
   const [b2, setB2] = useState(false)
   const [b3, setB3] = useState(false)
+
+  const [color] = useState(() => new THREE.Color())
+  const [pointer] = useState(() => new THREE.Vector3())
+  useFrame(() => {
+    dotmaterial.current.pointer.lerp(pointer, 0.1)
+    screen.current.color.lerp(color.set(b1 ? '#60a0ff' : '#0c080a'), 0.1)
+  })
 
   return (
     <>
@@ -78,7 +83,7 @@ function Model(props) {
           rotation={[0, 0, -Math.PI / 2]}
           onPointerMove={(e) => pointer.copy(e.point)}>
           <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.99, 0.99]}>
-            <screenMaterial color={b1 ? '#60a0ff' : '#3c383a'} roughness={0.18} metalness={0.7} {...screenProps} />
+            <screenMaterial ref={screen} roughness={0.18} metalness={0.7} {...screenProps} />
           </mesh>
         </mesh>
         <mesh geometry={nodes.Plane.geometry} position={[0.01, 1.6, 1.89]} rotation={[0, 0, -Math.PI / 2]} scale={[0.99, 0.1, 0.99]}></mesh>

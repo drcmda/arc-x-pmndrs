@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import React, { useRef, useMemo } from 'react'
 import { useFrame } from 'react-three-fiber'
 import './materials/DotMaterial'
@@ -14,7 +15,7 @@ const Particles = React.forwardRef(({ speed = 1 }, ref) => {
         initialCoords.push(x)
         initialCoords.push(y)
         initialCoords.push(i)
-        initialSizes.push(Math.random() < 0.01 ? 8 : 4)
+        initialSizes.push(Math.random() < 0.01 ? 8 : 2)
         i++
       }
     }
@@ -27,6 +28,7 @@ const Particles = React.forwardRef(({ speed = 1 }, ref) => {
   useFrame((state) => {
     geom.current.material.uniforms.time.value = state.clock.elapsedTime
     geom.current.geometry.verticesNeedUpdate = true
+    geom.current.material.uniforms.speed.value = THREE.MathUtils.lerp(geom.current.material.uniforms.speed.value, speed, 0.1)
   })
 
   return (
