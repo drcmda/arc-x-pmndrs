@@ -80,7 +80,7 @@ function Model(props) {
         </mesh>
         <group ref={arm} position={[0, 1.6, 1.85]}>
           <mesh geometry={nodes.Plane.geometry} material={materials['Material.004']} onPointerMove={(e) => pointer.copy(e.point)}>
-            <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.99, 0.99]}>
+            <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.2, 0.99]}>
               <screenMaterial ref={screen} roughness={0.18} metalness={0.7} {...screenProps} />
             </mesh>
           </mesh>
@@ -97,7 +97,7 @@ function Model(props) {
 
 export default function App() {
   return (
-    <Canvas pixelRatio={[1, 1.5]} camera={{ position: [-4, 4, 18], fov: 15, near: 1, far: 50 }}>
+    <Canvas pixelRatio={[1, 1.5]} camera={{ position: [-8, 4, 18], fov: 15, near: 1, far: 50 }}>
       <ambientLight intensity={1} />
       <color attach="background" args={['#151515']} />
       <fog attach="fog" args={['#151515', 20, 25]} />
