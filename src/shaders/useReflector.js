@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { SavePass, RenderPass, LambdaPass, BlurPass } from 'postprocessing'
 import { useResource, useThree } from 'react-three-fiber'
 
-export default function useReflector(textureWidth = 128, textureHeight = 128) {
+export default function useReflector(textureWidth = 100, textureHeight = 100) {
   const meshRef = useResource()
   const [reflectorPlane] = useState(() => new THREE.Plane())
   const [normal] = useState(() => new THREE.Vector3())
@@ -87,22 +87,7 @@ export default function useReflector(textureWidth = 128, textureHeight = 128) {
     projectionMatrix.elements[6] = clipPlane.y
     projectionMatrix.elements[10] = clipPlane.z + 1.0
     projectionMatrix.elements[14] = clipPlane.w
-  }, [
-    meshRef,
-    camera,
-    reflectorPlane,
-    normal,
-    reflectorWorldPosition,
-    cameraWorldPosition,
-    rotationMatrix,
-    lookAtPosition,
-    clipPlane,
-    view,
-    target,
-    q,
-    textureMatrix,
-    virtualCamera
-  ])
+  }, [])
 
   function afterRender() {
     if (!meshRef.current) return
@@ -116,9 +101,9 @@ export default function useReflector(textureWidth = 128, textureHeight = 128) {
     const savePass = new SavePass(renderTarget)
     const lambdaPassBefore = new LambdaPass(beforeRender)
     const lambdaPassAfter = new LambdaPass(afterRender)
-    const blurPass = new BlurPass({ width: 512, height: 512 })
+    const blurPass = new BlurPass({ width: 800, height: 800 })
     return [[lambdaPassBefore, renderPass, blurPass, savePass, lambdaPassAfter], { textureMatrix, tDiffuse: savePass.renderTarget.texture }]
-  }, [size, gl, textureWidth, textureHeight, beforeRender, virtualCamera, scene, gl.outputEncoding])
+  }, [])
 
   return [meshRef, props, passes]
 }

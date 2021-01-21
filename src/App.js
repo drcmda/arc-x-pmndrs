@@ -11,17 +11,14 @@ import './shaders/materials/ReflectorMaterial'
 function Button(props) {
   const { nodes, materials } = useGLTF('/arc-draco.glb')
   const [hovered, setHovered] = useState(false)
-  const [clicked, setClicked] = useState(false)
   useEffect(() => (document.body.style.cursor = hovered ? 'pointer' : 'auto'), [hovered])
   return (
     <mesh
-      onClick={(e) => (e.stopPropagation(), setClicked(!clicked))}
       onPointerOver={(e) => (e.stopPropagation(), setHovered(true))}
       onPointerOut={() => setHovered(false)}
       material={materials['black.001']}
       geometry={nodes.Slice001.geometry}
       {...props}
-      position-x={clicked ? -0.1 : 0}
     />
   )
 }
@@ -39,10 +36,14 @@ function Model(props) {
   const [pointer] = useState(() => new THREE.Vector3())
   useFrame(() => dotmaterial.current.pointer.lerp(pointer, 0.1))
 
+  const [b1, setB1] = useState(false)
+  const [b2, setB2] = useState(false)
+  const [b3, setB3] = useState(false)
+
   return (
     <>
       <orthographicCamera ref={targetCamera} args={[-20, 20, 20, -20]} />
-      {createPortal(<Particles ref={dotmaterial} />, virtualScene)}
+      {createPortal(<Particles ref={dotmaterial} speed={b2 ? 2 : 1} />, virtualScene)}
       <group ref={group} {...props} dispose={null}>
         <mesh material={materials.black} geometry={nodes.Cube.geometry} position={[0, 1, 0]} material-metalness={0.4}>
           <mesh
@@ -53,7 +54,7 @@ function Model(props) {
             material-color="#808080"
           />
           <mesh geometry={nodes.Slice.geometry}>
-            <meshBasicMaterial transparent opacity={0.5} color="#60a0ff" />
+            <meshBasicMaterial transparent opacity={0.5} color="#60a0ff" toneMapped={false} />
             <Text
               position={[0.34, 1.7, 0.02]}
               rotation-y={Math.PI / 2}
@@ -65,9 +66,9 @@ function Model(props) {
             />
           </mesh>
           <group position={[0.06, 0, 0]}>
-            <Button position={[0, 0, 0]} />
-            <Button position={[0, -0.47, 0]} />
-            <Button position={[0, -0.95, 0]} />
+            <Button onClick={(e) => (e.stopPropagation(), setB1(!b1))} position={[b1 ? -0.04 : 0, 0, 0]} />
+            <Button onClick={(e) => (e.stopPropagation(), setB2(!b2))} position={[b2 ? -0.04 : 0, -0.47, 0]} />
+            <Button onClick={(e) => (e.stopPropagation(), setB3(!b3))} position={[b3 ? -0.04 : 0, -0.95, 0]} />
           </group>
         </mesh>
         <mesh
@@ -77,15 +78,15 @@ function Model(props) {
           rotation={[0, 0, -Math.PI / 2]}
           onPointerMove={(e) => pointer.copy(e.point)}>
           <mesh geometry={nodes.Plane.geometry} position-y={0.01} scale={[0.99, 0.99, 0.99]}>
-            <screenMaterial color="#3c383a" roughness={0.18} metalness={0.7} envMapIntensity={0.4} {...screenProps} />
+            <screenMaterial color={b1 ? '#60a0ff' : '#3c383a'} roughness={0.18} metalness={0.7} {...screenProps} />
           </mesh>
         </mesh>
         <mesh geometry={nodes.Plane.geometry} position={[0.01, 1.6, 1.89]} rotation={[0, 0, -Math.PI / 2]} scale={[0.99, 0.1, 0.99]}></mesh>
         <mesh material={materials['black.002']} geometry={nodes.Plane002.geometry} position={[0, 1.6, 1.89]} rotation={[0, 0, -Math.PI / 2]} />
         <mesh material={materials['Material.001']} geometry={nodes.Plane003.geometry} scale={[11.8, 11.8, 11.8]} />
       </group>
-      <Circle ref={meshRef} args={[12, 36, 36]} rotation-x={-Math.PI / 2} position-y={-1.39}>
-        <reflectorMaterial transparent opacity={0.2} color="black" metalness={1} roughness={1} {...reflectorProps} />
+      <Circle ref={meshRef} args={[2.75, 36, 36]} rotation-x={-Math.PI / 2} position={[1, -1.39, 0]}>
+        <reflectorMaterial transparent opacity={0.5} color="black" metalness={1} roughness={1} {...reflectorProps} />
       </Circle>
     </>
   )
@@ -93,12 +94,12 @@ function Model(props) {
 
 export default function App() {
   return (
-    <Canvas pixelRatio={[1, 1.5]} camera={{ position: [-4, 5, 7], fov: 35, near: 1, far: 15 }}>
-      <ambientLight intensity={0.6} />
-      <color attach="background" args={['#202020']} />
-      <fog attach="fog" args={['#202020', 10, 15]} />
-      <directionalLight position={[-10, 0, -15]} intensity={0.4} />
-      <directionalLight position={[10, 10, 10]} intensity={0.4} />
+    <Canvas pixelRatio={[1, 1.5]} camera={{ position: [-4, 4, 18], fov: 15, near: 1, far: 50 }}>
+      <ambientLight intensity={1} />
+      <color attach="background" args={['#151515']} />
+      <fog attach="fog" args={['#151515', 20, 25]} />
+      <directionalLight position={[-10, 0, -15]} intensity={0.2} />
+      <directionalLight position={[10, 10, 10]} intensity={0.2} />
       <Suspense fallback={null}>
         <Model position={[1, -1.4, 0]} rotation={[0, -Math.PI / 2, 0]} />
       </Suspense>

@@ -4,7 +4,7 @@ import './materials/DotMaterial'
 
 const ROW = 150
 const COL = 150
-const Particles = React.forwardRef((props, ref) => {
+const Particles = React.forwardRef(({ speed = 1 }, ref) => {
   const [coords, sizes] = useMemo(() => {
     const initialCoords = []
     const initialSizes = []
@@ -25,7 +25,7 @@ const Particles = React.forwardRef((props, ref) => {
 
   const geom = useRef()
   useFrame((state) => {
-    geom.current.material.uniforms.time.value = state.clock.getElapsedTime()
+    geom.current.material.uniforms.time.value = state.clock.elapsedTime
     geom.current.geometry.verticesNeedUpdate = true
   })
 
